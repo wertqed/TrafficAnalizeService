@@ -23,4 +23,4 @@ def check_kluster(data):
     klusters = get_klasters(8)
 
 
-get_klasters(2)
+get_klasters(6)
