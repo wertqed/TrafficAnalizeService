@@ -4,11 +4,13 @@ import matplotlib.pyplot as plt
 from pandas import read_csv
 import datetime, time
 
+
 def get_csv_data():
     dataframe = read_csv('NC.csv', engine='python', nrows=1000)
     print len(dataframe)
-    data = dataframe.loc[(dataframe['driver_age'])> 0 & np.isnan(dataframe['driver_gender'] == False) & np.isnan(['stop_time'] == False)]
-    return data[['driver_age', 'driver_gender', 'stop_time']]
+    data = dataframe.loc[(dataframe['driver_age']) > 0 & np.isnan(dataframe['driver_gender'] == False) & np.isnan(
+        ['stop_time'] == False)]
+    return data[['driver_age', 'driver_gender', 'stop_time']].as_matrix()
 
 
 print get_csv_data()
