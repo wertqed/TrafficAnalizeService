@@ -1,5 +1,7 @@
-from flask import Flask, request, json
+from flask import Flask, request, json, send_file, make_response
 import DataLoad
+import KMeansKlasterService
+
 app = Flask(__name__)
 
 
@@ -14,3 +16,10 @@ def load():
     return data
 
 
+@app.route('/getDiagram', methods=['GET'])
+def getDiagram():
+    img = KMeansKlasterService.make_diagam(5)
+    response = make_response(img.getvalue())
+    response.headers['Content-Type'] = 'image/png'
+    # send_file(img, mimetype='image/gif')
+    return response

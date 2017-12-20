@@ -4,7 +4,7 @@ from sklearn.cluster import KMeans
 from sklearn import metrics
 import matplotlib.pyplot as plt
 import datetime
-
+import io
 
 def get_k_means(count_klast):
     data = DataLoad.get_transformed_data().as_matrix()
@@ -50,16 +50,11 @@ def make_diagam(count_klast):
     plt.title('Size of klasters', size=14)
     plt.pie(klust_sizes,
             labels=legend)
-    plt.show()
+    img = io.BytesIO()
+    plt.savefig(img, format='png')
+    return img
 
-    # plt.savefig('images/plot3.png', format='png')
 
-
-# def check_kluster(data,):
-#     data = DataLoad.get_transformed_data().as_matrix()
-#     k_means = KMeans(n_clusters=8)
-#     fits = k_means.fit(data)
-#     centrx = k_means.cluster_centers_
 
 
 
