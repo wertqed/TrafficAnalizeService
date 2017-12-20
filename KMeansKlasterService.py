@@ -5,6 +5,9 @@ from sklearn import metrics
 import matplotlib.pyplot as plt
 import datetime
 import io
+import cStringIO
+from reportlab.pdfgen import canvas
+
 
 def get_k_means(count_klast):
     data = DataLoad.get_transformed_data().as_matrix()
@@ -29,7 +32,7 @@ def get_klasters(count_klast):
 
 def make_diagam(count_klast):
     data = DataLoad.get_transformed_data().as_matrix()
-    k_means = KMeans(n_clusters=count_klast)
+    k_means = KMeans(n_clusters=count_klast, random_state=1)
     k_means.fit(data)
     centers = k_means.cluster_centers_
     klusters = []
@@ -52,10 +55,25 @@ def make_diagam(count_klast):
             labels=legend)
     img = io.BytesIO()
     plt.savefig(img, format='png')
+    plt.clf()
     return img
 
 
+def create_pdf(count_klast):
+    data = DataLoad.get_transformed_data().as_matrix()
+    k_means = KMeans(n_clusters=count_klast, random_state=1)
+    k_means.fit(data)
+    centers = k_means.cluster_centers_
+    klusters = []
+    for j in range(count_klast):
+        klusters.append([])
+    for i, la in enumerate(k_means.labels_):
+        klusters[la].append(data[i])
 
-
-
-make_diagam(5)
+    colors = ['black', 'green', 'yellow', 'blue', 'fuchsia', 'red', 'indigo', 'cyan']
+    output = cStringIO.StringIO()
+    p = canvas.Canvas(output)
+    p.save()
+    pdf_out = output.getvalue()
+    output.close()
+    return pdf_out
