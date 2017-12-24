@@ -6,9 +6,10 @@ import datetime
 
 # Загрузка из CSV файла
 def get_csv_data():
-    dataframe = read_csv('NC.csv', engine='python', nrows=2000).dropna(subset=['driver_age', 'driver_gender', 'stop_time'])
+    dataframe = read_csv('NC.csv', engine='python', nrows=1000).dropna(subset=['driver_age', 'driver_gender', 'stop_time'])
     data = dataframe.loc[(dataframe['driver_age']) > 0]
-    return dataframe[['driver_age', 'driver_gender', 'stop_time']]
+    data = data[['driver_age', 'driver_gender', 'stop_time']]
+    return data
 
 def sex_to_bool(sex):
     if sex == "M":
