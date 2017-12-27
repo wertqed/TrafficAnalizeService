@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+2
+import subprocess
+
 import DataLoad
 from sklearn.cluster import KMeans
 from sklearn import metrics
@@ -69,10 +72,46 @@ def create_pdf(count_klast):
         klusters.append([])
     for i, la in enumerate(k_means.labels_):
         klusters[la].append(data[i])
-
-    colors = ['black', 'green', 'yellow', 'blue', 'fuchsia', 'red', 'indigo', 'cyan']
     output = cStringIO.StringIO()
     p = canvas.Canvas(output)
+    number = 1
+    it = 1
+    it2 = 1
+    for k in klusters:
+        if (800 - it * 20) < 20:
+            it = 1
+            it2 = 1
+            p.showPage()
+        it = it + 1
+        it2 = it2 + 1
+        p.drawString(100, 800 - it * 20, "center of klusters num" + str(number) + " age: " + str(
+            int(centers[number - 1][0])) + " time: " + str(
+            datetime.timedelta(seconds=int(centers[number - 1][2]))))
+        it = it + 1
+        it2 = it2 + 1
+        p.drawString(50, 800 - it * 20, "Men")
+        p.drawString(200, 800 - it * 20,  "Woman")
+        it = it + 1
+        it2 = it2 + 1
+        for i in k:
+            if (int(i[1]) == 0):
+                if (800 - it * 20) < 20:
+                    it = 1
+                    it2 = 1
+                    p.showPage()
+                p.drawString(50, 800 - it * 20,
+                             "age: " + str(int(i[0])) + " time: " + str(datetime.timedelta(seconds=int(i[2]))))
+                it = it + 1
+            else:
+                if (800 - it2 * 20) < 20:
+                    it = 1
+                    it2 = 1
+                    p.showPage()
+                p.drawString(200, 800 - it2 * 20,
+                             "age: " + str(int(i[0])) + " time: " + str(datetime.timedelta(seconds=int(i[2]))))
+                it2 = it2 + 1
+        number = number + 1
+
     p.save()
     pdf_out = output.getvalue()
     output.close()
