@@ -1,8 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 <div align="center">
-    <img src="{{imgUrl3D}}">
-    <img src="{{imgUrlCircle}}">
-    <input type="button" value="Скачать отчёт" onclick="location.href='get{{type}}Pdf'">
+    <img src="{{url_for('static', filename=imgUrl3D)}}">
+    <img src="{{url_for('static', filename=imgUrl2D)}}">
+</div>
+<div align="center">
+    <input type="button" value="Скачать отчёт" onclick="location.href='pdf/{{filename}}'" align="center">
 </div>
 {% endblock %}

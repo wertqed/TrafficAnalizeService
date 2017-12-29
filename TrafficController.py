@@ -2,35 +2,38 @@ from flask import Flask, redirect, request, json, send_file, make_response, rend
 
 import DataLoad
 import KMeansKlasterService
+import Aglomerative
 
 app = Flask(__name__)
 
 
-@app.route('/getAglomerative', methods=['GET', 'POST'])
-def get_file():
+@app.route('/aglomerative/<filename>', methods=['GET', 'POST'])
+def get_file(filename):
+    Aglomerative.make_diagam(DataLoad.get_transformed_data(filename), 10)
     return render_template('kluster.html',
                            imgUrl3D='aglomerative3d.png',
                            imgUrl2D='aglomerative2d.png',
-                           type='aglomerative')
+                           filename=filename)
+
+@app.route('/aglomerative/pdf/<filename>', methods=['GET', 'POST'])
+def get_agl_pdf(filename):
+    pdf = Aglomerative.create_pdf(DataLoad.get_transformed_data(filename), 10)
+    response = make_response(pdf)
+    response.headers['Content-Disposition'] = "attachment; filename='police_stops_report.pdf"
+    response.mimetype = 'application/pdf'
+    return response
 
 
 @app.route('/home', methods=['GET'])
 def get_index():
-    if request.method == 'POST':
-        return redirect('/choosemethod')
-    else:
-        return render_template("index.html")
+    return render_template("index.html")
 
 
 @app.route('/myfile', methods=['POST', 'GET'])
 def get_myfile():
-    if request.method == 'POST':
-        return redirect(url_for('get_method'))
+    filename = request.files['filz'].filename
+    return render_template('methods.html', filename=filename)
 
-
-@app.route('/choosemethod', methods=['GET', 'POST'])
-def get_method():
-    return render_template('file.html')
 
 
 @app.route('/getDefaultTestDataPredictions', methods=['GET'])
@@ -51,7 +54,6 @@ def getDiagram():
     response.headers['Content-Type'] = 'image/png'
     # send_file(img, mimetype='image/gif')
     return response
-
 
 @app.route('/getPdf', methods=['GET'])
 def getPdf():

@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 from pandas import read_csv
-import datetime
+import datetime  # Загрузка из CSV файла
 
-
-# Загрузка из CSV файла
-def get_csv_data():
-    dataframe = read_csv('NC.csv', engine='python', nrows=1000).dropna(subset=['driver_age', 'driver_gender', 'stop_time'])
+def get_csv_data(filename):
+    dataframe = read_csv(filename, engine='python', nrows=10000).dropna(
+        subset=['driver_age', 'driver_gender', 'stop_time'])
     data = dataframe.loc[(dataframe['driver_age']) > 0]
     data = data[['driver_age', 'driver_gender', 'stop_time']]
     return data
+
 
 def sex_to_bool(sex):
     if sex == "M":
@@ -22,8 +22,8 @@ def time_to_seconds(time):
 
 
 # получение преобразованных данных
-def get_transformed_data():
-    data = get_csv_data()
+def get_transformed_data(filename):
+    data = get_csv_data(filename)
     data['driver_gender'] = data['driver_gender'].apply(sex_to_bool)
     data['stop_time'] = data['stop_time'].apply(time_to_seconds)
     return data

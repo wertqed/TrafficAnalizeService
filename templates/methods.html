@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<div align="center">
+    Выберите метод:
+</div>
+<div align="center">
+    <input type="button" value="K-средних" onclick="location.href='/kmeans/{{filename}}'"/>
+    <input type="button" value="Агломеративный" onclick="location.href='/aglomerative/{{filename}}'"/>
+</div>
+{% endblock %}
