@@ -119,4 +119,4 @@ def create_pdf(data, n_clusters):
     output.close()
     return pdf_out
 
-doAgglomerative(DataLoad.get_transformed_data('10000.csv'), 10)
+# doAgglomerative(DataLoad.get_transformed_data('10000.csv'), 10)
