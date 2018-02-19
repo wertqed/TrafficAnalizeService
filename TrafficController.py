@@ -15,6 +15,7 @@ def get_file(filename):
                            imgUrl2D='aglomerative2d.png',
                            filename=filename)
 
+
 @app.route('/aglomerative/pdf/<filename>', methods=['GET', 'POST'])
 def get_agl_pdf(filename):
     pdf = Aglomerative.create_pdf(DataLoad.get_transformed_data(filename), 10)
@@ -35,7 +36,6 @@ def get_myfile():
     return render_template('methods.html', filename=filename)
 
 
-
 @app.route('/getDefaultTestDataPredictions', methods=['GET'])
 def get_default_test_predictions():
     return DataLoad.get_transformed_data().as_matrix()
@@ -47,17 +47,18 @@ def load():
     return data
 
 
-@app.route('/getDiagram', methods=['GET'])
-def getDiagram():
-    img = KMeansKlasterService.make_diagam(5)
-    response = make_response(img.getvalue())
-    response.headers['Content-Type'] = 'image/png'
+@app.route('/kmeans/<filename>', methods=['GET', 'POST'])
+def getDiagram(filename):
+    KMeansKlasterService.make_diagam(5, filename)
     # send_file(img, mimetype='image/gif')
-    return response
+    return render_template('kluster.html',
+                           imgUrl2D='kmeans2d.png',
+                           filename=filename)
 
-@app.route('/getPdf', methods=['GET'])
-def getPdf():
-    pdf = KMeansKlasterService.create_pdf(5)
+
+@app.route('/kmeans/pdf/<filename>', methods=['GET', 'POST'])
+def getPdf(filename):
+    pdf = KMeansKlasterService.create_pdf(5, filename)
     response = make_response(pdf)
     response.headers['Content-Disposition'] = "attachment; filename='police_stops_report.pdf"
     response.mimetype = 'application/pdf'

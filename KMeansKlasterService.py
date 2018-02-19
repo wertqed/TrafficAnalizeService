@@ -10,6 +10,7 @@ import datetime
 import io
 import cStringIO
 from reportlab.pdfgen import canvas
+from mpl_toolkits.mplot3d import Axes3D
 
 
 def get_k_means(count_klast):
@@ -33,11 +34,12 @@ def get_klasters(count_klast):
     return klusters
 
 
-def make_diagam(count_klast):
-    data = DataLoad.get_transformed_data().as_matrix()
+def make_diagam(count_klast, filename):
+    data = DataLoad.get_transformed_data(filename).as_matrix()
     k_means = KMeans(n_clusters=count_klast, random_state=1)
     k_means.fit(data)
     centers = k_means.cluster_centers_
+    print "silhuette:", metrics.silhouette_score(data, k_means.labels_)
     klusters = []
     for j in range(count_klast):
         klusters.append([])
@@ -57,13 +59,22 @@ def make_diagam(count_klast):
     plt.pie(klust_sizes,
             labels=legend)
     img = io.BytesIO()
-    plt.savefig(img, format='png')
+    plt.savefig('static/kmeans2d.png')
+    plt.show()
     plt.clf()
+
+    # fig = plt.figure()
+    # ax2 = Axes3D(fig)
+    # ax2.scatter(data[:, 0], data[:, 1], data[:, 2], c=klusters, cmap='prism')
+    # ax2.set_xlabel('driver_age')
+    # ax2.set_ylabel('driver_gender')
+    # ax2.set_zlabel('stop_time')
+    # plt.savefig('static/kmeans3d.png')
     return img
 
 
-def create_pdf(count_klast):
-    data = DataLoad.get_transformed_data().as_matrix()
+def create_pdf(count_klast,filename):
+    data = DataLoad.get_transformed_data(filename).as_matrix()
     k_means = KMeans(n_clusters=count_klast, random_state=1)
     k_means.fit(data)
     centers = k_means.cluster_centers_
@@ -116,3 +127,6 @@ def create_pdf(count_klast):
     pdf_out = output.getvalue()
     output.close()
     return pdf_out
+
+
+make_diagam(50, "NC.csv")
